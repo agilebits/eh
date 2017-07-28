@@ -4,26 +4,24 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/agilebits/ehcl/secrets"
+	"github.com/agilebits/eh/secrets"
 	"github.com/spf13/cobra"
 )
 
 // encryptCmd represents the encrypt command
 var encryptCmd = &cobra.Command{
 	Use:   "encrypt",
-	Short: "Encrypt protected values using key management system",
+	Short: "Encrypt protected in .hcl file",
 	Long: ` 
 	
 Encrypt command is used to encrypt the protected values in the contents of 
 the standard input and write result into the standard output. 
 
-The .hcl file must include the 'ehcl' section.
+The .hcl file must include the 'eh' section.
 
 For example:
 
-  cat app-config.hcl | echl encrypt > encrypted-app-config.hcl
-  echl encrypt app-config.hcl > encrypted-app-config.hcl
-  echl encrypt -i app-config.hcl
+	eh encrypt -i app-config.hcl
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		url, err := getURL(args)

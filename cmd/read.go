@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/agilebits/ehcl/secrets"
+	"github.com/agilebits/eh/secrets"
 	"github.com/spf13/cobra"
 )
 
@@ -12,11 +12,11 @@ import (
 var readCmd = &cobra.Command{
 	Use:   "read",
 	Short: "Read and decrypt file and all included fragments",
-	Long: `In addition to decrypting the protected values this command will also read and merge all included files specified in the ehcl include. 
+	Long: `In addition to decrypting the protected values this command will also read and merge all included files specified in the eh include. 
 	
 For example:
 
-  ehcl read app-config.hcl
+  eh read app-config.hcl
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		url, err := getURL(args)

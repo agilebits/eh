@@ -1,4 +1,4 @@
-ehcl {
+eh {
 	encrypted = false
 	key       = ""
 

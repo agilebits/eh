@@ -3,17 +3,17 @@
 //
 name = "Sample AWS"
 
-// Special `ehcl` element that defines encryption parameters
-ehcl {
+// Special `eh` element that defines encryption parameters
+eh {
 	// encrypted will changed to `true` after all values are encrypted
 	encrypted = false
 	key = ""
 	
 	// Encryption service parameters (AWS)
 	service {
-		type = "aws"
+		type = "awskms"
 		region = "us-east-1"
-		masterKey = "arn:aws:kms:us-east-1:921352645774:key/d845cfa3-0719-46d1-8d00-123b63e40ddf"
+		masterKey = "arn:aws:kms:us-east-1:123456789012:alias/KeyAlias"
 	}
 
 	// List of protected keys. The values of these keys will be encrypted.

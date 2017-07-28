@@ -3,8 +3,8 @@
 //
 name = "Sample Local"
 
-// Special `ehcl` element that defines encryption parameters
-ehcl {
+// Special `eh` element that defines encryption parameters
+eh {
 	// encrypted will changed to `true` after all values are encrypted
 	encrypted = false
 	key       = ""
@@ -27,7 +27,7 @@ ehcl {
 	]
 
 	include = [
-		"./shared.hcl",
+		"./local-include.hcl",
 	]
 }
 

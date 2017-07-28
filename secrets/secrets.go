@@ -18,8 +18,8 @@ import (
 )
 
 const (
-	typeLocal = "local"
-	typeAWS   = "aws"
+	typeLocal  = "local"
+	typeAWSKMS = "awskms"
 )
 
 // Encrypt will generate a new key and encrypt the protected values.
@@ -71,7 +71,7 @@ func Encrypt(contents []byte) ([]byte, error) {
 	return result.Bytes(), nil
 }
 
-// DecryptWithHeader will access the key service and decrypt the protected values in the content. It returns unformatted AST file and ehcl header found in the contents.
+// DecryptWithHeader will access the key service and decrypt the protected values in the content. It returns unformatted AST file and 'eh' header found in the contents.
 func DecryptWithHeader(contents []byte) (*ast.File, *Header, error) {
 	tree, err := hcl.ParseBytes(contents)
 	if err != nil {
@@ -201,7 +201,7 @@ func getKeyService(service ServiceParams) (KeyService, error) {
 	switch service.Type {
 	case typeLocal:
 		keyService = NewDevKeyService()
-	case typeAWS:
+	case typeAWSKMS:
 		keyService = NewAwsKeyService(service.Region, service.MasterKey)
 	default:
 		return nil, fmt.Errorf("unsupported service type: %+q", service.Type)

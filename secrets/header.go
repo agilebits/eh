@@ -2,7 +2,7 @@ package secrets
 
 // Wrapper allows access to the echl Header entry
 type Wrapper struct {
-	Header Header `hcl:"ehcl"`
+	Header Header `hcl:"eh"`
 }
 
 // Header is a special entry in the .hcl file that defines encryption parameters
@@ -15,7 +15,7 @@ type Header struct {
 	Include []string
 }
 
-// ServiceParams is a part of the EHCL entry with crypto service type and parameters
+// ServiceParams is a part of the header entry with crypto service type and parameters
 type ServiceParams struct {
 	Type      string
 	Region    string

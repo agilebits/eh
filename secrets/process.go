@@ -96,8 +96,8 @@ func processList(list *ast.ObjectList, op operation, key *EncryptionKey, protect
 func processItem(item *ast.ObjectItem, op operation, key *EncryptionKey, protect map[string]bool) error {
 	name := item.Keys[0].Token.Text
 
-	if len(item.Keys) == 1 && name == "ehcl" {
-		// do not process ehcl element
+	if len(item.Keys) == 1 && name == "eh" {
+		// do not process eh element
 		return nil
 	}
 
@@ -163,28 +163,28 @@ func getHeaderValue(node ast.Node, name string) (*ast.LiteralType, error) {
 		return nil, errors.New("failed, unexpected .hcl format")
 	}
 
-	ehcl := list.Filter("ehcl")
-	if len(ehcl.Items) != 1 {
-		return nil, errors.New("failed, must have 'ehcl' element")
+	eh := list.Filter("eh")
+	if len(eh.Items) != 1 {
+		return nil, errors.New("failed, must have 'eh' element")
 	}
 
-	obj, ok := ehcl.Items[0].Val.(*ast.ObjectType)
+	obj, ok := eh.Items[0].Val.(*ast.ObjectType)
 	if !ok {
-		return nil, errors.New("failed, invalid 'ehcl' element")
+		return nil, errors.New("failed, invalid 'eh' element")
 	}
 
 	keyEntry := obj.List.Filter(name)
 	if len(keyEntry.Items) == 0 {
-		return nil, fmt.Errorf("failed, no %q element found in 'ehcl'", name)
+		return nil, fmt.Errorf("failed, no %q element found in 'eh'", name)
 	}
 
 	if len(keyEntry.Items) > 1 {
-		return nil, fmt.Errorf("failed, multiple %q elements found in 'ehcl'", name)
+		return nil, fmt.Errorf("failed, multiple %q elements found in 'eh'", name)
 	}
 
 	val, ok := keyEntry.Items[0].Val.(*ast.LiteralType)
 	if !ok {
-		return nil, fmt.Errorf("failed, invalid %q element in 'ehcl'", name)
+		return nil, fmt.Errorf("failed, invalid %q element in 'eh'", name)
 	}
 
 	return val, nil
@@ -205,7 +205,7 @@ func removeHeader(tree ast.Node) error {
 	}
 
 	for i, item := range list.Items {
-		if item.Keys[0].Token.Text == "ehcl" {
+		if item.Keys[0].Token.Text == "eh" {
 			list.Items = append(list.Items[:i], list.Items[i+1:]...)
 			return nil
 		}

@@ -53,7 +53,7 @@ func (key *EncryptionKey) Decrypt(message []byte) ([]byte, error) {
 			errorMsg = fmt.Sprintf("invalid JSON %+q...%+q", string(message[:120]), string(message[len(message)-75:]))
 		}
 
-		return nil, errors.Wrapf(err, errorMsg)
+		return nil, errors.Wrap(err, errorMsg)
 	}
 
 	if m.KID != key.KID {
