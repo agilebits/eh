@@ -1,11 +1,8 @@
 package cmd
 
 import (
-	"bufio"
 	"fmt"
-	"io/ioutil"
 	"log"
-	"os"
 
 	"github.com/agilebits/ehcl/secrets"
 	"github.com/spf13/cobra"
@@ -25,10 +22,16 @@ The .hcl file must include the 'ehcl' section.
 For example:
 
   cat app-config.hcl | echl encrypt > encrypted-app-config.hcl
+  echl encrypt app-config.hcl > encrypted-app-config.hcl
+  echl encrypt -i app-config.hcl
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		reader := bufio.NewReader(os.Stdin)
-		message, err := ioutil.ReadAll(reader)
+		url, err := getURL(args)
+		if err != nil {
+			log.Fatal("failed to get url: ", err)
+		}
+
+		message, err := read(url)
 		if err != nil {
 			log.Fatal("failed to read:", err)
 		}
@@ -38,14 +41,18 @@ For example:
 			log.Fatal("failed to encrypt:", err)
 		}
 
-		fmt.Println(string(result))
+		if isFileURL(url) && inplace {
+			if err := write(url, result); err != nil {
+				log.Fatal("failed to write:", err)
+			}
+		} else {
+			fmt.Println(string(result))
+		}
 	},
 }
 
 func init() {
 	RootCmd.AddCommand(encryptCmd)
 
-	encryptCmd.Flags().StringVarP(&env, "env", "e", "dev", "Environment type: 'dev' or 'aws")
-	encryptCmd.Flags().StringVarP(&region, "region", "r", "", "AWS Region ('us-east-1')")
-	encryptCmd.Flags().StringVarP(&masterKeyID, "master", "m", "", "Master key identifier")
+	encryptCmd.Flags().BoolVarP(&inplace, "inplace", "i", false, "Encrypt file in-place")
 }

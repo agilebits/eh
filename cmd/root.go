@@ -40,13 +40,11 @@ func Execute() {
 	}
 }
 
-var env string
-var region string
-var masterKeyID string
+var inplace bool
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.sm/config.yaml)")
+	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.ehcl/config.yaml)")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -55,9 +53,9 @@ func initConfig() {
 		viper.SetConfigFile(cfgFile)
 	}
 
-	viper.SetConfigName("config")    // name of config file (without extension)
-	viper.AddConfigPath("$HOME/.sm") // adding home directory as first search path
-	viper.AutomaticEnv()             // read in environment variables that match
+	viper.SetConfigName("config")      // name of config file (without extension)
+	viper.AddConfigPath("$HOME/.ehcl") // adding home directory as first search path
+	viper.AutomaticEnv()               // read in environment variables that match
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {

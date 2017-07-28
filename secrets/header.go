@@ -1,17 +1,18 @@
 package secrets
 
-// Header allows access to the EHCL entry
-type Header struct {
-	EHCL EHCL
+// Wrapper allows access to the echl Header entry
+type Wrapper struct {
+	Header Header `hcl:"ehcl"`
 }
 
-// EHCL is a special entry in the .hcl file that defines encryption parameters
-type EHCL struct {
+// Header is a special entry in the .hcl file that defines encryption parameters
+type Header struct {
 	Encrypted bool
 	Key       string
 
 	Service ServiceParams
 	Protect []string
+	Include []string
 }
 
 // ServiceParams is a part of the EHCL entry with crypto service type and parameters

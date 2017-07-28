@@ -95,6 +95,12 @@ func processList(list *ast.ObjectList, op operation, key *EncryptionKey, protect
 
 func processItem(item *ast.ObjectItem, op operation, key *EncryptionKey, protect map[string]bool) error {
 	name := item.Keys[0].Token.Text
+
+	if len(item.Keys) == 1 && name == "ehcl" {
+		// do not process ehcl element
+		return nil
+	}
+
 	if err := processNode(name, item.Val, op, key, protect); err != nil {
 		return errors.Wrapf(err, "failed to processNode %q", name)
 	}
@@ -182,4 +188,28 @@ func getHeaderValue(node ast.Node, name string) (*ast.LiteralType, error) {
 	}
 
 	return val, nil
+}
+
+func removeHeader(tree ast.Node) error {
+	var list *ast.ObjectList
+
+	file, ok := tree.(*ast.File)
+	if ok {
+		list, ok = file.Node.(*ast.ObjectList)
+	} else {
+		list, ok = tree.(*ast.ObjectList)
+	}
+
+	if !ok {
+		return errors.New("failed, unexpected .hcl format")
+	}
+
+	for i, item := range list.Items {
+		if item.Keys[0].Token.Text == "ehcl" {
+			list.Items = append(list.Items[:i], list.Items[i+1:]...)
+			return nil
+		}
+	}
+
+	return nil
 }

@@ -7,8 +7,8 @@ name = "Sample Local"
 ehcl {
 	// encrypted will changed to `true` after all values are encrypted
 	encrypted = false
-	key = ""
-	
+	key       = ""
+
 	// Encryption service parameters (Local)
 	service {
 		type = "local"
@@ -25,25 +25,29 @@ ehcl {
 		"securityToken",
 		"hook",
 	]
+
+	include = [
+		"./shared.hcl",
+	]
 }
 
 // Sample data
 smtp {
 	username = "AKIAI4JG42A2LILVBNNZ"
 	password = "smtp-password-value-1"
-	host = "email-smtp.us-east-1.amazonaws.com"
-	port = 587
+	host     = "email-smtp.us-east-1.amazonaws.com"
+	port     = 587
 }
 
 s3 {
-	name = "avatars"
-	region = "us-east-1"
-	credentials = "accesskey"
-	accessKey = "AKIAJZF5WRZKVRMYUIDQ"
-	secret = "s3-secret-here"
+	name          = "avatars"
+	region        = "us-east-1"
+	credentials   = "accesskey"
+	accessKey     = "AKIAJZF5WRZKVRMYUIDQ"
+	secret        = "s3-secret-here"
 	securityToken = "security-token-value-here"
-	bucket = "some-bucket.com"
-	baseURL = "https://s3.amazonaws.com/some-bucket.com/"
+	bucket        = "some-bucket.com"
+	baseURL       = "https://s3.amazonaws.com/some-bucket.com/"
 }
 
 slack {
@@ -55,3 +59,6 @@ slack {
 		hook = "https://slack.com/2"
 	}
 }
+
+
+

@@ -13,7 +13,7 @@ ehcl {
 	service {
 		type = "aws"
 		region = "us-east-1"
-		masterKey = "arn:aws:kms:us-east-1:123456789012:alias/KeyAlias"
+		masterKey = "arn:aws:kms:us-east-1:921352645774:key/d845cfa3-0719-46d1-8d00-123b63e40ddf"
 	}
 
 	// List of protected keys. The values of these keys will be encrypted.

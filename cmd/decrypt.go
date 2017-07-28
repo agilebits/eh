@@ -1,11 +1,8 @@
 package cmd
 
 import (
-	"bufio"
 	"fmt"
-	"io/ioutil"
 	"log"
-	"os"
 
 	"github.com/agilebits/ehcl/secrets"
 	"github.com/spf13/cobra"
@@ -22,24 +19,36 @@ It requires access to the same key management system (KMS) that was used for enc
 For example:
 
   cat encrypted-app-config.hcl | ehcl decrypt > app-config.hcl
-
+  ehcl decrypt encrypted-app-config.hcl > app-config.hcl
+  ehcl decrypt -i app-config.hcl
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		reader := bufio.NewReader(os.Stdin)
-		message, err := ioutil.ReadAll(reader)
+		url, err := getURL(args)
+		if err != nil {
+			log.Fatal("failed to get url: ", err)
+		}
+
+		message, err := read(url)
 		if err != nil {
 			log.Fatal("failed to read:", err)
 		}
 
 		result, err := secrets.Decrypt(message)
 		if err != nil {
-			log.Fatal("failed to Decrypt:", err)
+			log.Fatal("failed to decrypt: ", err)
 		}
 
-		fmt.Println(string(result))
+		if isFileURL(url) && inplace {
+			if err := write(url, result); err != nil {
+				log.Fatal("failed to write:", err)
+			}
+		} else {
+			fmt.Println(string(result))
+		}
 	},
 }
 
 func init() {
 	RootCmd.AddCommand(decryptCmd)
+	decryptCmd.Flags().BoolVarP(&inplace, "inplace", "i", false, "Decrypt file in-place")
 }
