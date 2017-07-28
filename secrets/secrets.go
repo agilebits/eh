@@ -71,8 +71,8 @@ func Encrypt(contents []byte) ([]byte, error) {
 	return result.Bytes(), nil
 }
 
-// DecryptWithHeader will access the key service and decrypt the protected values in the content. It returns unformatted AST file and 'eh' header found in the contents.
-func DecryptWithHeader(contents []byte) (*ast.File, *Header, error) {
+// decryptWithHeader will access the key service and decrypt the protected values in the content. It returns unformatted AST file and 'eh' header found in the contents.
+func decryptWithHeader(contents []byte, failIfNotEncrypted bool) (*ast.File, *Header, error) {
 	tree, err := hcl.ParseBytes(contents)
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "failed to ParseBytes")
@@ -84,7 +84,11 @@ func DecryptWithHeader(contents []byte) (*ast.File, *Header, error) {
 	}
 
 	if !wrapper.Header.Encrypted {
-		return nil, nil, errors.New("contents is not encrypted")
+		if failIfNotEncrypted {
+			return nil, nil, errors.New("contents is not encrypted")
+		}
+
+		return tree, &wrapper.Header, nil
 	}
 
 	keyBytes, err := base64.RawURLEncoding.DecodeString(wrapper.Header.Key)
@@ -135,7 +139,7 @@ func FormatASTFile(file *ast.File) ([]byte, error) {
 
 // Decrypt will access the key service and decrypt the protected values in the content.
 func Decrypt(contents []byte) ([]byte, error) {
-	result, _, err := DecryptWithHeader(contents)
+	result, _, err := decryptWithHeader(contents, true)
 	if err != nil {
 		return nil, err
 	}
@@ -159,7 +163,7 @@ func Read(url string) ([]byte, error) {
 		return nil, err
 	}
 
-	tree, header, err := DecryptWithHeader(contents)
+	tree, header, err := decryptWithHeader(contents, false)
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to decrypt url %q", url)
 	}
