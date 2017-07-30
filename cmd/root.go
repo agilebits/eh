@@ -14,9 +14,9 @@ var RootCmd = &cobra.Command{
 	Use:   "eh",
 	Short: "Encrypt and decrypt protected values in .hcl files",
 	Long: `	
-This utility is used to protect secrets in server apps. 
+Protect secrets in .hcl files. 
 	
-It relies on the key management system (KMS) provided by the server environment.
+This utility relies on the key management system (KMS) provided by the server environment.
 For example, Amazon Web Services KMS is used for servers running on EC2 virtual 
 machines. A special "local" implementation can be used when running on developer machines 
 to avoid storing unencrypted secrets in version control systems.
