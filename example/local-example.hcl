@@ -54,11 +54,10 @@ slack {
 	channel1 {
 		hook = "https://slack.com/1"
 	}
+}
 
+slack {
 	channel2 {
 		hook = "https://slack.com/2"
 	}
 }
-
-
-
