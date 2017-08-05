@@ -181,7 +181,7 @@ func Read(url string) ([]byte, error) {
 	for _, name := range header.Include {
 		if strings.HasPrefix(name, "./") {
 			dir, _ := path.Split(url)
-			name = path.Join(dir, name)
+			name = dir + "/" + name[2:]
 		}
 
 		fragment, err := Read(name)
