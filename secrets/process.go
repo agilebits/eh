@@ -45,6 +45,32 @@ func processNode(name string, node ast.Node, op operation, key *EncryptionKey, p
 			return errors.Wrapf(err, "failed to processItem %q", name)
 		}
 	case *ast.LiteralType:
+		if t.Token.Type == token.HEREDOC && protect[name] {
+			switch op {
+			case opEncrypt:
+				ciphertext, err := key.Encrypt([]byte(t.Token.Text))
+				if err != nil {
+					return errors.Wrapf(err, "failed to Encrypt %q", name)
+				}
+
+				encoded := base64.RawURLEncoding.EncodeToString(ciphertext)
+				t.Token.Text = "<<HEREDOC\n" + encoded + "\nHEREDOC"
+			case opDecrypt:
+				value := t.Token.Value().(string)
+				decoded, err := base64.RawURLEncoding.DecodeString(value)
+				if err != nil {
+					return errors.Wrapf(err, "failed to decode base64 value %q", value)
+				}
+
+				plaintext, err := key.Decrypt(decoded)
+				if err != nil {
+					return errors.Wrapf(err, "failed to decrypt value %q", value)
+				}
+
+				t.Token.Text = string(plaintext)
+			}
+		}
+
 		if t.Token.Type == token.STRING && protect[name] {
 			value, err := strconv.Unquote(t.Token.Text)
 			if err != nil {
