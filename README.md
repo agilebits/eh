@@ -13,6 +13,13 @@ go install github.com/agilebits/eh
 eh help
 ```
 
+## Update
+
+```
+go get -u github.com/agilebits/eh
+go install github.com/agilebits/eh
+```
+
 ## Encryption Options
 
 There are two encryption options: "local" and "awskms". 
